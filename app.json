@@ -1,0 +1,38 @@
+{
+  "env": {
+    "WV_BEARER_API_KEY": {
+      "description": "WV application key",
+      "value": "2d6f5e27433c414bbbd455b9bce5d44e",
+      "required": true
+    },
+    "WV_PUBLIC_API_URL": {
+      "description": "WV public api url",
+      "value": "https://carlo_test_wsli_1.eu.wizyvision.app/api/v1/public/files",
+      "required": true
+    },
+    "APP_SECRET": {
+      "generator": "secret",
+      "required": true
+    },
+    "TAG_IDS": {
+      "description": "Tag ids",
+      "value": "",
+      "required": false
+    },
+    "PRIVACY_IDS": {
+      "description": "Privacy id",
+      "value": "",
+      "required": false
+    },
+    "SLACK_BEARER_TOKEN": {
+      "description": "Slack bot token",
+      "value": "",
+      "required": false
+    },
+    "SLACK_CHANNEL_ID": {
+      "description": "Slack channel id",
+      "value": "",
+      "required": false
+    }
+  }
+}
