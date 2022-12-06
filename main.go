@@ -1,7 +1,6 @@
 package main
 
 import (
-	"cloud-storage-connector/config"
 	"cloud-storage-connector/handlers"
 	"log"
 	"net/http"
@@ -11,8 +10,6 @@ import (
 )
 
 func main() {
-	config.InitConfig()
-
 	router := mux.NewRouter()
 	handlers.SetupEndpoints(router)
 
