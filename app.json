@@ -10,8 +10,9 @@
       "value": "",
       "required": true
     },
-    "APP_SECRET": {
-      "generator": "secret",
+    "SERVICE_ACCOUNT": {
+      "description": "Secret manager resource of service account",
+      "value": "",
       "required": true
     },
     "TAG_IDS": {
