@@ -2,12 +2,12 @@
   "env": {
     "WV_BEARER_API_KEY": {
       "description": "WV application key",
-      "value": "2d6f5e27433c414bbbd455b9bce5d44e",
+      "value": "",
       "required": true
     },
     "WV_PUBLIC_API_URL": {
       "description": "WV public api url",
-      "value": "https://carlo_test_wsli_1.eu.wizyvision.app/api/v1/public/files",
+      "value": "",
       "required": true
     },
     "APP_SECRET": {
