@@ -3,7 +3,6 @@ package run
 import (
 	"bytes"
 	"cloud-storage-connector/notifications"
-	secret "cloud-storage-connector/secret_manager"
 	"context"
 	"fmt"
 	"io"
@@ -19,7 +18,6 @@ import (
 	createTask "cloud-storage-connector/create_task"
 
 	"cloud.google.com/go/storage"
-	"google.golang.org/api/option"
 	"google.golang.org/appengine"
 )
 
@@ -114,12 +112,12 @@ func Execute(gcsObject string, gcsBucket string) (string, error) {
 func downloadFileIntoMemory(bucket, object string) ([]byte, error) {
 	ctx := context.Background()
 	// var w io.Writer
-	serviceAccountKey, err := secret.LoadSecret(ctx, "projects/wv-gcs-connector-dev/secrets/gcs-conn-service-acct/versions/2")
-	if err != nil {
-		fmt.Printf("error fetching service acct: %s", err)
-	}
+	// serviceAccountKey, err := secret.LoadSecret(ctx, "projects/wv-gcs-connector-dev/secrets/gcs-conn-service-acct/versions/2")
+	// if err != nil {
+	// 	fmt.Printf("error fetching service acct: %s", err)
+	// }
 
-	client, err := storage.NewClient(ctx, option.WithCredentialsJSON(serviceAccountKey))
+	client, err := storage.NewClient(ctx)
 	if err != nil {
 		return nil, err
 	}

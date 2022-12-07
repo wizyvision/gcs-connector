@@ -17,7 +17,6 @@ func LoadSecret(ctx context.Context, name string) ([]byte, error) {
 	// name := "projects/my-project/secrets/my-secret/versions/latest"
 
 	// Create the client.
-	// ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create secretmanager client: %v", err)
@@ -42,8 +41,5 @@ func LoadSecret(ctx context.Context, name string) ([]byte, error) {
 		return nil, fmt.Errorf("Data corruption detected.")
 	}
 
-	// WARNING: Do not print the secret in a production environment - this snippet
-	// is showing how to access the secret material.
-	// fmt.Fprintf(w, "Plaintext: %s\n", string(result.Payload.Data))
 	return result.Payload.GetData(), nil
 }
