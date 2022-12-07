@@ -20,13 +20,11 @@
     },
     "SLACK_BEARER_TOKEN": {
       "description": "Slack bot token",
-      "value": "",
-      "required": false
+      "value": ""
     },
     "SLACK_CHANNEL_ID": {
       "description": "Slack channel id",
-      "value": "",
-      "required": false
+      "value": ""
     },
     "AUTH_HEADER": {
       "description": "Auth header",
