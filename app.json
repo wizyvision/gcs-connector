@@ -17,13 +17,11 @@
     },
     "TAG_IDS": {
       "description": "Tag ids",
-      "value": "",
-      "required": false
+      "value": ""
     },
     "PRIVACY_IDS": {
       "description": "Privacy id",
-      "value": "",
-      "required": false
+      "value": ""
     },
     "SLACK_BEARER_TOKEN": {
       "description": "Slack bot token",
