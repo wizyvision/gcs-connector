@@ -10,7 +10,7 @@
 git clone https://github.com/sephdiza/gcs-connector.git
 ```
 2. Install [docker](https://docs.docker.com/get-docker).
-3. Create a file named .env at the root of this folder. Copy the contents of placeholder.env and set the values.
+3. Create a file named `.env` at the root of this folder. Copy the contents of `placeholder.env` and set the values.
 ```
 # GCP
 GOOGLE_CLOUD_PROJECT='wv-gcs-connector-dev'
