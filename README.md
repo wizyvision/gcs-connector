@@ -13,6 +13,7 @@ Add these roles to the default service account:
 - Storage Object Viewer
 - Cloud Task Enqueuer
 - Cloud Run Developer
+- Pub/Sub Publisher
 
 
 ## Deploy manually
