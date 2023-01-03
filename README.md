@@ -67,9 +67,9 @@ docker push gcr.io/PROJECT_NAME_HERE/IMAGE_NAME
 gcloud run deploy IMAGE_NAME \
   --project PROJECT_NAME \
   --image IMAGE_URL \
-  --region REGION
-  --allow-unauthenticated\
-  --memory=256Mi\
+  --region REGION \
+  --allow-unauthenticated \
+  --memory=256Mi \
   --max-instances=10
 ```
 7. Take note of the URL of the service after successfully deploying. This will be needed in the [Trigger service](https://github.com/sephdiza/gcs-connector-trigger-function) deployment.
