@@ -69,4 +69,4 @@ gcloud run deploy IMAGE_NAME \
   --image IMAGE_URL \
   --region REGION
 ```
-7. Take note of the URL of the service after successfully deploying. This will be needed in the Trigger service deployment.
+7. Take note of the URL of the service after successfully deploying. This will be needed in the [Trigger service](https://github.com/sephdiza/gcs-connector-trigger-function) deployment.
