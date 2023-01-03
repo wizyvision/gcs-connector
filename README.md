@@ -1,6 +1,8 @@
 # wv-connector
 
+
 ## Deploy via cloud run button
+
 [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
 
 After successful deployment, navigate to *GCP IAM & Admin* and find the default compute service account created.
@@ -8,9 +10,10 @@ After successful deployment, navigate to *GCP IAM & Admin* and find the default 
 <img width="978" alt="Screen Shot 2022-12-21 at 9 39 25 AM" src="https://user-images.githubusercontent.com/35460203/208800600-bcd461e5-63ee-4678-82d1-be8a2006249c.png">
 
 Add these roles to the default service account:
-⋅⋅* Storage Admin Viewer
-⋅⋅* Cloud Task Enqueuer
-⋅⋅* 
+..* Storage Admin Viewer
+..* Cloud Task Enqueuer
+..* 
+
 
 ## Deploy manually
 
