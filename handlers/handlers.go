@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"cloud-storage-connector/logger"
 	"cloud-storage-connector/run"
 	"encoding/json"
 	"fmt"
@@ -28,14 +29,15 @@ func runHandler(w http.ResponseWriter, r *http.Request) {
 	gcsObject := r.URL.Query().Get("gcsObject")
 	gcsBucket := r.URL.Query().Get("gcsBucket")
 	if gcsObject == "" || gcsBucket == "" {
-		http.Error(w, "gcsObject and gcsBucet are required", http.StatusBadRequest)
+		errMsg := "gcsObject and gcsBucket cannot be empty"
+		logger.LogError("", errMsg)
+		http.Error(w, errMsg, http.StatusBadRequest)
 		return
 	}
 
 	status, err := run.Execute(gcsObject, gcsBucket)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Error on upload : %s", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

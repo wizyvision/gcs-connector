@@ -2,6 +2,7 @@ package run
 
 import (
 	"bytes"
+	"cloud-storage-connector/logger"
 	"cloud-storage-connector/notifications"
 	"context"
 	"fmt"
@@ -17,7 +18,9 @@ import (
 
 	createTask "cloud-storage-connector/create_task"
 
+	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/storage"
+	"google.golang.org/api/option"
 	"google.golang.org/appengine"
 )
 
@@ -48,7 +51,15 @@ func Execute(gcsObject string, gcsBucket string) (string, error) {
 	// file name and bucket should be from the query parameter
 	data, err := downloadFileIntoMemory(gcsBucket, gcsObject)
 	if err != nil {
-		fmt.Printf("Error downloading file into memory: %v", err)
+		logger.LogError("Error downloading file into memory", err.Error())
+
+		errMsg := &notifications.Message{
+			Pretext: "[Uploader] Failed to upload image.",
+			Text:    fmt.Sprintf("Errow downloading file into memory %s", err),
+		}
+		notifications.SendSlackErrorMessage(*errMsg)
+
+		return "", err
 	}
 
 	// Determine the content type of the file
@@ -61,24 +72,25 @@ func Execute(gcsObject string, gcsBucket string) (string, error) {
 
 	var fw io.Writer
 	if fw, err = createFormFile(writer, gcsObject, dataMimeType); err != nil {
-		fmt.Printf("Error creating writer: %v", err)
+		logger.LogError("Error creating writer.", err.Error())
+		return "", err
 	}
 
 	// copy the file
 	_, err = io.Copy(fw, bytes.NewReader(data))
 	if err != nil {
-		fmt.Println("Error COPY:", err)
+		logger.LogError("Error copying file.", err.Error())
 	}
 
 	// Add the addTagIds field
 	err = writer.WriteField("addTagIds", os.Getenv("TAG_IDS"))
 	if err != nil {
-		fmt.Println("Error addTagids value:", err)
+		logger.LogError("Error writing field addTagIds.", err.Error())
 	}
 	// Add privacyId
 	err = writer.WriteField("privacyId", os.Getenv("PRIVACY_ID"))
 	if err != nil {
-		fmt.Println("Error privacyId value:", err)
+		logger.LogError("Error writing field privacyId.", err.Error())
 	}
 
 	writer.Close()
@@ -101,7 +113,9 @@ func Execute(gcsObject string, gcsBucket string) (string, error) {
 		}
 		notifications.SendSlackErrorMessage(*errMsg)
 	}
-	fmt.Println(response)
+	// fmt.Println(response)
+	responseString := fmt.Sprintf("%v", response)
+	logger.LogInfo(responseString)
 
 	status := response.Status
 
@@ -117,8 +131,9 @@ func downloadFileIntoMemory(bucket, object string) ([]byte, error) {
 	// 	fmt.Printf("error fetching service acct: %s", err)
 	// }
 
-	client, err := storage.NewClient(ctx)
+	client, err := createCloudStorageClient(ctx)
 	if err != nil {
+		logger.LogError("Error in creating cloud storage client.", err.Error())
 		return nil, err
 	}
 	defer client.Close()
@@ -126,9 +141,15 @@ func downloadFileIntoMemory(bucket, object string) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*50)
 	defer cancel()
 
-	rc, err := client.Bucket(bucket).Object(object).NewReader(ctx)
+	gcsBucket := client.Bucket(bucket)
+	_, err = gcsBucket.Attrs(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("Object(%q).NewReader: %v", object, err)
+		return nil, fmt.Errorf("Bucket %q: %v", bucket, err)
+	}
+
+	rc, err := gcsBucket.Object(object).NewReader(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("Object %q: %v", object, err)
 	}
 	defer rc.Close()
 
@@ -165,4 +186,12 @@ func createFormFile(w *multipart.Writer, filename, mimeType string) (io.Writer, 
 	h.Set("Content-Type", mimeType)
 	fmt.Println("mimeType:", mimeType)
 	return w.CreatePart(h)
+}
+
+func createCloudStorageClient(ctx context.Context) (*storage.Client, error) {
+	if !metadata.OnGCE() {
+		return storage.NewClient(ctx, option.WithCredentialsFile(os.Getenv("GOOGLE_APPLICATION_CREDENTIALS_PATH")))
+	} else {
+		return storage.NewClient(ctx)
+	}
 }
