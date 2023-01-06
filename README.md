@@ -27,14 +27,14 @@ git clone https://github.com/sephdiza/gcs-connector.git
 3. Create a file named `.env` at the root of this folder. Copy the contents of `placeholder.env` and set the values.
 ```
 # GCP
-GOOGLE_CLOUD_PROJECT='wv-gcs-connector-dev'
+GOOGLE_CLOUD_PROJECT="<INPUT_YOUR_PROJECT_NAME_HERE>"
 
 # Path where you put the service account file
 GOOGLE_APPLICATION_CREDENTIALS_PATH="./secrets/service-account.json"
 
 # WizyVision
 # The application API key
-WV_BEARER_API_KEY=""
+WV_BEARER_API_KEY="<INPUT_WIZYVISION_APP_BEARER_API_KEY_HERE>"
 
 # Public API url of your account
 WV_PUBLIC_API_URL="https://mywizyvisiondomain.eu.wizyvision.app/api/v1/public/files"
