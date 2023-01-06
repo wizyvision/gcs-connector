@@ -49,9 +49,9 @@ func runHandler(w http.ResponseWriter, r *http.Request) {
 
 func verifyToken(endpointHandler func(writer http.ResponseWriter, request *http.Request)) http.HandlerFunc {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		tokens := request.Header[os.Getenv("AUTH_HEADER")]
+		tokens := request.Header[os.Getenv("UPLOADER_SERVICE_AUTH_HEADER")]
 		if tokens != nil {
-			if tokens[0] != os.Getenv("AUTH_TOKEN") {
+			if tokens[0] != os.Getenv("UPLOADER_SERVICE_AUTH_TOKEN") {
 				writer.WriteHeader(http.StatusUnauthorized)
 				_, err := writer.Write([]byte("You're Unauthorized"))
 				if err != nil {
