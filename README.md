@@ -73,3 +73,6 @@ gcloud run deploy IMAGE_NAME \
   --max-instances=10
 ```
 7. Take note of the URL of the service after successfully deploying. This will be needed in the [Trigger service](https://github.com/sephdiza/gcs-connector-trigger-function) deployment.
+<img width="920" alt="Screen Shot 2023-01-06 at 9 57 03 AM" src="https://user-images.githubusercontent.com/35460203/210914793-204acff1-a8ec-4328-b022-0b4bf33b9277.png">
+
+
