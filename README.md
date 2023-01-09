@@ -46,7 +46,6 @@ After successful deployment (applies for both using Cloud Run Button and Manual 
 Add these roles to the default service account:
 - Storage Object Viewer
 - Cloud Run Developer
-- Pub/Sub Publisher
 
 
 ### Manual installation
