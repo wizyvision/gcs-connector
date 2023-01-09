@@ -4,11 +4,13 @@ import (
 	"cloud-storage-connector/logger"
 	"cloud-storage-connector/run"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
+	"google.golang.org/api/googleapi"
 )
 
 func SetupEndpoints(router *mux.Router) {
@@ -37,7 +39,17 @@ func runHandler(w http.ResponseWriter, r *http.Request) {
 
 	status, err := run.Execute(gcsObject, gcsBucket)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		var e *googleapi.Error
+		if isGoogleApiError := errors.As(err, &e); isGoogleApiError {
+			errCode := e.Code
+			errMessage := e.Message
+			errMsg := fmt.Sprintf("Status: %d \nError: %q \nBucket: %q \nObject: %q", errCode, errMessage, gcsBucket, gcsObject)
+			logger.LogError(errMsg, err.Error())
+			fmt.Println("test")
+			http.Error(w, errMsg, errCode)
+		} else {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
 		return
 	}
 

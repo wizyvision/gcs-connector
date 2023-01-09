@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/cloudtasks v1.8.0
 	cloud.google.com/go/storage v1.28.0
 	github.com/gorilla/mux v1.8.0
-	google.golang.org/api v0.105.0 // indirect
+	google.golang.org/api v0.105.0
 	google.golang.org/appengine v1.6.7
 )
 

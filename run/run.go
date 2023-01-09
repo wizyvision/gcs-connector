@@ -5,6 +5,7 @@ import (
 	"cloud-storage-connector/logger"
 	"cloud-storage-connector/notifications"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -20,6 +21,7 @@ import (
 
 	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/storage"
+	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"
 	"google.golang.org/appengine"
 )
@@ -51,11 +53,10 @@ func Execute(gcsObject string, gcsBucket string) (string, error) {
 	// file name and bucket should be from the query parameter
 	data, err := downloadFileIntoMemory(gcsBucket, gcsObject)
 	if err != nil {
-		logger.LogError("Error downloading file into memory", err.Error())
-
+		// Send error notification on slack
 		errMsg := &notifications.Message{
 			Pretext: "[Uploader] Failed to upload image.",
-			Text:    fmt.Sprintf("Errow downloading file into memory %s", err),
+			Text:    fmt.Sprintf("Error downloading file into memory %s", err),
 		}
 		notifications.SendSlackErrorMessage(*errMsg)
 
@@ -141,15 +142,31 @@ func downloadFileIntoMemory(bucket, object string) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*50)
 	defer cancel()
 
+	// Get cloud storage bucket
 	gcsBucket := client.Bucket(bucket)
 	_, err = gcsBucket.Attrs(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("Bucket %q: %v", bucket, err)
+		var e *googleapi.Error
+		if isGoogleApiError := errors.As(err, &e); isGoogleApiError {
+			return nil, e
+		} else {
+			if err == storage.ErrBucketNotExist {
+				errMsg := fmt.Sprintf("Status: 400 \nError: Bucket does not exist. \nBucket: %q", bucket)
+				logger.LogError(errMsg, err.Error())
+				return nil, fmt.Errorf(errMsg)
+			} else {
+				errMsg := fmt.Sprintf("Bucket: %q \nObject %q: \nError: %q", bucket, object, err.Error())
+				return nil, fmt.Errorf(errMsg)
+			}
+		}
 	}
 
+	// Get cloud storage object
 	rc, err := gcsBucket.Object(object).NewReader(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("Object %q: %v", object, err)
+		errMsg := fmt.Sprintf("Status: 400 \nError: Object does not exist. \nObject: %q", object)
+		logger.LogError(errMsg, err.Error())
+		return nil, fmt.Errorf(errMsg)
 	}
 	defer rc.Close()
 
