@@ -1,22 +1,30 @@
-# wv-connector
+# Google Cloud Storage Connector
+
+> This repo contains the **Uploader** app that is deployed in Cloud Run. To run the whole Storage connector, you will also need the [**Trigger**](https://github.com/sephdiza/gcs-connector-trigger-function) function to be deployed in Cloud Function.
 
 
-## Deploy via cloud run button
+GCS Connector uploads files on WizyVision, on every files that will be uploaded in the source GCS bucket.
 
+
+![gcs connector](https://user-images.githubusercontent.com/4800851/211000369-70e9be5f-36a6-4e60-8232-f6b73d892d8b.png)
+
+
+## Installation
 [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
 
-After successful deployment, navigate to *GCP IAM & Admin* and find the default compute service account created.
+### Adding Permissions
+After successful deployment (applies for both using Cloud Run Button and Manual Installation), navigate to *GCP IAM & Admin* and find the default compute service account created.
 
 <img width="978" alt="Screen Shot 2022-12-21 at 9 39 25 AM" src="https://user-images.githubusercontent.com/35460203/208800600-bcd461e5-63ee-4678-82d1-be8a2006249c.png">
 
+
 Add these roles to the default service account:
 - Storage Object Viewer
-- Cloud Task Enqueuer
 - Cloud Run Developer
 - Pub/Sub Publisher
 
 
-## Deploy manually
+### Manual installation
 
 1. Clone this repository.
 
@@ -74,5 +82,10 @@ gcloud run deploy IMAGE_NAME \
 ```
 7. Take note of the URL of the service after successfully deploying. This will be needed in the [Trigger service](https://github.com/sephdiza/gcs-connector-trigger-function) deployment.
 <img width="920" alt="Screen Shot 2023-01-06 at 9 57 03 AM" src="https://user-images.githubusercontent.com/35460203/210914793-204acff1-a8ec-4328-b022-0b4bf33b9277.png">
+
+## Testing the Connector
+> Note: The [**Trigger**](https://github.com/sephdiza/gcs-connector-trigger-function) function should already be deployed
+1. Upload files on the GCS bucket
+2. In WizyVision webapp, you should see the file uploaded there with the correct tags and privacy
 
 
