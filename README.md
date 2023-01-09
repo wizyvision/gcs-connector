@@ -8,6 +8,31 @@ GCS Connector uploads files on WizyVision, on every files that will be uploaded 
 
 ![gcs connector](https://user-images.githubusercontent.com/4800851/211000369-70e9be5f-36a6-4e60-8232-f6b73d892d8b.png)
 
+## Setup and Requirements
+1. Google Cloud project
+2. WizyVision account
+3. Cloud Storage bucket
+4. Enable the APIs required
+```
+gcloud services enable \
+    cloudfunctions.googleapis.com \
+    pubsub.googleapis.com \
+    cloudbuild.googleapis.com \
+    artifactregistry.googleapis.com \
+    containerregistry.googleapis.com \
+    run.googleapis.com \
+    --quiet
+```
+5. Grant the pubsub.publisher role to the Cloud Storage service account. This will allow the service account to publish events when images are uploaded into the bucket.
+```
+SERVICE_ACCOUNT="$(gsutil kms serviceaccount -p GOOGLE_CLOUD_PROJECT_ID_HERE)"
+
+gcloud projects add-iam-policy-binding GOOGLE_CLOUD_PROJECT_ID_HERE \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role='roles/pubsub.publisher'
+```
+6. Install [docker](https://docs.docker.com/get-docker) for Manual installation.
+
 
 ## Installation
 [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
@@ -31,8 +56,7 @@ Add these roles to the default service account:
 ```
 git clone https://github.com/sephdiza/gcs-connector.git
 ```
-2. Install [docker](https://docs.docker.com/get-docker).
-3. Create a file named `.env` at the root of this folder. Copy the contents of `placeholder.env` and set the values.
+2. Create a file named `.env` at the root of this folder. Copy the contents of `placeholder.env` and set the values.
 ```
 # GCP
 GOOGLE_CLOUD_PROJECT="<INPUT_YOUR_PROJECT_NAME_HERE>"
@@ -61,16 +85,16 @@ UPLOADER_SERVICE_AUTH_TOKEN=""
 SLACK_BEARER_TOKEN=""
 SLACK_CHANNEL_ID=""
 ```
-4. Build the image.
+3. Build the image.
 ```
 docker build -t IMAGE_NAME .
 ```
-5. Push the image to the container registry.
+4. Push the image to the container registry.
 ```
 docker tag IMAGE_NAME gcr.io/PROJECT_NAME_HERE/IMAGE_NAME
 docker push gcr.io/PROJECT_NAME_HERE/IMAGE_NAME 
 ```
-6. Deploy to cloud run.
+5. Deploy to cloud run.
 ```
 gcloud run deploy IMAGE_NAME \
   --project PROJECT_NAME \
@@ -80,12 +104,12 @@ gcloud run deploy IMAGE_NAME \
   --memory=256Mi \
   --max-instances=10
 ```
-7. Take note of the URL of the service after successfully deploying. This will be needed in the [Trigger service](https://github.com/sephdiza/gcs-connector-trigger-function) deployment.
+6. Take note of the URL of the service after successfully deploying. This will be needed in the [Trigger service](https://github.com/sephdiza/gcs-connector-trigger-function) deployment.
 <img width="920" alt="Screen Shot 2023-01-06 at 9 57 03 AM" src="https://user-images.githubusercontent.com/35460203/210914793-204acff1-a8ec-4328-b022-0b4bf33b9277.png">
 
 ## Testing the Connector
 > Note: The [**Trigger**](https://github.com/sephdiza/gcs-connector-trigger-function) function should already be deployed
 1. Upload files on the GCS bucket
-2. In WizyVision webapp, you should see the file uploaded there with the correct tags and privacy
+2. In WizyVision webapp, you should see the file uploaded there with the correct tags and privacy set during the deployment
 
 
