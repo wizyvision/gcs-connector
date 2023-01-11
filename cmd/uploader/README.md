@@ -1,6 +1,10 @@
 # Google Cloud Storage Connector
 
+> This repo contains the **Uploader** app that is deployed in Cloud Run. To run the whole Storage connector, you will also need the [**Trigger**](https://github.com/sephdiza/gcs-connector-trigger-function) function to be deployed in Cloud Function.
+
+
 GCS Connector uploads files on WizyVision, on every files that will be uploaded in the source GCS bucket.
+
 
 ![gcs connector](https://user-images.githubusercontent.com/4800851/211000369-70e9be5f-36a6-4e60-8232-f6b73d892d8b.png)
 
@@ -8,7 +12,7 @@ GCS Connector uploads files on WizyVision, on every files that will be uploaded 
 1. Google Cloud project
 2. WizyVision account
 3. Cloud Storage bucket
-4. Enable the APIs required in GCP
+4. Enable the APIs required
 ```
 gcloud services enable \
     cloudfunctions.googleapis.com \
@@ -27,14 +31,11 @@ gcloud projects add-iam-policy-binding GOOGLE_CLOUD_PROJECT_ID_HERE \
     --member="serviceAccount:${SERVICE_ACCOUNT}" \
     --role='roles/pubsub.publisher'
 ```
-1. For manual installation you will need [docker](https://docs.docker.com/get-docker) and Go 1.17.
+6. Install [docker](https://docs.docker.com/get-docker) for Manual installation.
 
 
 ## Installation
-The GCS connector is composed of 2 components, the __Uploader__ and the __Trigger Function__ which will be deployed separately
-
-### Uploader service
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run?dir=cmd/uploader)
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
 
 ### Adding Permissions
 After successful deployment (applies for both using Cloud Run Button and Manual Installation), navigate to *GCP IAM & Admin* and find the default compute service account created.
@@ -47,13 +48,14 @@ Add these roles to the default service account:
 - Cloud Run Developer
 
 
-### Manual installation of Uploader service
+### Manual installation
+
 1. Clone this repository.
+
 ```
-git clone https://github.com/wizyvision/gcs-connector.git
+git clone https://github.com/sephdiza/gcs-connector.git
 ```
-2. Navigate to `cmd/uploader` folder
-3. Create a file named `.env` at the root of this folder. Copy the contents of `placeholder.env` and set the values.
+2. Create a file named `.env` at the root of this folder. Copy the contents of `placeholder.env` and set the values.
 ```
 # GCP
 GOOGLE_CLOUD_PROJECT="<INPUT_YOUR_PROJECT_NAME_HERE>"
@@ -82,16 +84,16 @@ UPLOADER_SERVICE_AUTH_TOKEN=""
 SLACK_BEARER_TOKEN=""
 SLACK_CHANNEL_ID=""
 ```
-4. Build the image.
+3. Build the image.
 ```
 docker build -t IMAGE_NAME .
 ```
-5. Push the image to the container registry.
+4. Push the image to the container registry.
 ```
 docker tag IMAGE_NAME gcr.io/PROJECT_NAME_HERE/IMAGE_NAME
 docker push gcr.io/PROJECT_NAME_HERE/IMAGE_NAME 
 ```
-6. Deploy to cloud run.
+5. Deploy to cloud run.
 ```
 gcloud run deploy IMAGE_NAME \
   --project PROJECT_NAME \
@@ -101,44 +103,11 @@ gcloud run deploy IMAGE_NAME \
   --memory=256Mi \
   --max-instances=10
 ```
-7. Take note of the URL of the service after successfully deploying. This will be needed in the __Trigger function__ deployment.
+6. Take note of the URL of the service after successfully deploying. This will be needed in the [Trigger service](https://github.com/sephdiza/gcs-connector-trigger-function) deployment.
 <img width="920" alt="Screen Shot 2023-01-06 at 9 57 03 AM" src="https://user-images.githubusercontent.com/35460203/210914793-204acff1-a8ec-4328-b022-0b4bf33b9277.png">
 
-### Manual installation of Trigger function
-> Trigger function only supports manual installation
-1. Navigate to `cmd/trigger_function` folder
-2. Run `go mod tidy`
-3. Create a file named `.env.yaml` at the root of this folder. Copy the contents of `placeholder.env.yaml` and set the values
-
-```
-# Google Cloud project ID
-GOOGLE_CLOUD_PROJECT: "INPUT_YOUR_GOOGLE_CLOUD_PROJECT_HERE"
-
-# Region where this service will be deployed
-GCLOUD_REGION: "europe-west1"
-
-# Cloud storage bucket name where the files will be uploaded
-BUCKET_NAME: "INPUT_YOUR_GOOGLE_CLOUD_STORAGE_HERE"
-
-# Uploader service endpoint
-UPLOADER_SERVICE: "<INPUT_SERVICE_ENDPOINT_HERE>/run"
-
-# Header and token to be authenticated to call the Uploader service
-UPLOADER_SERVICE_AUTH_HEADER: "Wizdam-Dev-Csc-Token"
-UPLOADER_SERVICE_AUTH_TOKEN: ""
-
-# Slack used for notification when errors are encountered. Can be left blank
-SLACK_BEARER_TOKEN: ""
-SLACK_CHANNEL_ID: ""
-```
-
-4. To deploy, run
-```
-sh deploy.sh
-```
-
 ## Testing the Connector
-> Both the Uploader service and the Trigger function should be deployed
+> Note: The [**Trigger**](https://github.com/sephdiza/gcs-connector-trigger-function) function should already be deployed
 1. Upload files on the GCS bucket
 2. In WizyVision webapp, you should see the file uploaded there with the correct tags and privacy set during the deployment
 
