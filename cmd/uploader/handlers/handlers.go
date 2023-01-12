@@ -46,7 +46,6 @@ func runHandler(w http.ResponseWriter, r *http.Request) {
 			errMessage := e.Message
 			errMsg := fmt.Sprintf("Status: %d \nError: %q \nBucket: %q \nObject: %q", errCode, errMessage, gcsBucket, gcsObject)
 			logger.LogError(errMsg, err.Error())
-			fmt.Println("test")
 			http.Error(w, errMsg, errCode)
 		} else {
 			http.Error(w, err.Error(), http.StatusBadRequest)
