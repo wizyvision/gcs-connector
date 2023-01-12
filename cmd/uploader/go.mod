@@ -1,4 +1,4 @@
-module cloud-storage-connector
+module github.com/wizyvision/gcs-connector/cmd/uploader
 
 go 1.16
 

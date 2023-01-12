@@ -1,4 +1,4 @@
-module test.com/gocloudfunc
+module github.com/wizyvision/gcs-connector/cmd/trigger-function
 
 go 1.17
 

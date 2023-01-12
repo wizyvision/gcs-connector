@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"os"
 
-	"test.com/gocloudfunc/logger"
-	"test.com/gocloudfunc/notifications"
+	"github.com/wizyvision/gcs-connector/cmd/trigger-function/logger"
+	"github.com/wizyvision/gcs-connector/cmd/trigger-function/notifications"
 
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 	"github.com/cloudevents/sdk-go/v2/event"

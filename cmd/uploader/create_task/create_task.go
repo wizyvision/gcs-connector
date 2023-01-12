@@ -1,10 +1,11 @@
 package createTask
 
 import (
-	"cloud-storage-connector/notifications"
 	"context"
 	"fmt"
 	"os"
+
+	"github.com/wizyvision/gcs-connector/cmd/uploader/notifications"
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	"cloud.google.com/go/cloudtasks/apiv2/cloudtaskspb"

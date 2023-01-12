@@ -1,13 +1,14 @@
 package handlers
 
 import (
-	"cloud-storage-connector/logger"
-	"cloud-storage-connector/run"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/wizyvision/gcs-connector/cmd/uploader/logger"
+	"github.com/wizyvision/gcs-connector/cmd/uploader/run"
 
 	"github.com/gorilla/mux"
 	"google.golang.org/api/googleapi"

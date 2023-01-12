@@ -1,10 +1,11 @@
 package main
 
 import (
-	"cloud-storage-connector/handlers"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/wizyvision/gcs-connector/cmd/uploader/handlers"
 
 	"github.com/gorilla/mux"
 )

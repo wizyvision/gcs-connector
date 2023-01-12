@@ -2,8 +2,6 @@ package run
 
 import (
 	"bytes"
-	"cloud-storage-connector/logger"
-	"cloud-storage-connector/notifications"
 	"context"
 	"errors"
 	"fmt"
@@ -17,7 +15,10 @@ import (
 	"strings"
 	"time"
 
-	createTask "cloud-storage-connector/create_task"
+	"github.com/wizyvision/gcs-connector/cmd/uploader/logger"
+	"github.com/wizyvision/gcs-connector/cmd/uploader/notifications"
+
+	createTask "github.com/wizyvision/gcs-connector/cmd/uploader/create_task"
 
 	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/storage"
