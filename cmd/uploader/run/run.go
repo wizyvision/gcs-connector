@@ -107,6 +107,15 @@ func Execute(gcsObject string, gcsBucket string) (string, error) {
 	// send request with headers
 	client := &http.Client{}
 	response, responseErr := client.Do(req)
+	// Success is indicated with 2xx status codes:
+	statusOK := response.StatusCode >= 200 && response.StatusCode < 300
+	if !statusOK {
+		errData := fmt.Sprintf("%v", response)
+		errMsg := fmt.Sprintf("Non-OK HTTP status: %v", response.StatusCode)
+		logger.LogError(errMsg, errData)
+		throwErr := fmt.Errorf(errData)
+		return errData, throwErr
+	}
 	if responseErr != nil {
 		errMsg := &notifications.Message{
 			Pretext: "[Uploader] Failed to upload image.",
@@ -114,7 +123,6 @@ func Execute(gcsObject string, gcsBucket string) (string, error) {
 		}
 		notifications.SendSlackErrorMessage(*errMsg)
 	}
-	// fmt.Println(response)
 	responseString := fmt.Sprintf("%v", response)
 	logger.LogInfo(responseString)
 
