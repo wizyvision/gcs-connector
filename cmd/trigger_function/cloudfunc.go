@@ -2,6 +2,7 @@ package cloudfunc
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -58,6 +59,14 @@ func gcsConnectorTrigger(ctx context.Context, event event.Event) error {
 	setAuth(req)
 
 	response, err := client.Do(req)
+	// Success is indicated with 2xx status codes:
+	statusOK := response.StatusCode >= 200 && response.StatusCode < 300
+	if !statusOK {
+		errMsg := fmt.Sprintf("%v", response)
+		logger.LogError(fmt.Sprintf("Non-OK HTTP status: %v", response.StatusCode), errMsg)
+		return errors.New(errMsg)
+	}
+
 	if err != nil {
 		logger.LogError("Error calling request: ", err.Error())
 		errMsg := &notifications.Message{
