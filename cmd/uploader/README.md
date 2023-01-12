@@ -1,9 +1,9 @@
-# Google Cloud Storage Connector
+# GCS Connector - Uploader service
 
-> This repo contains the **Uploader** app that is deployed in Cloud Run. To run the whole Storage connector, you will also need the [**Trigger**](https://github.com/sephdiza/gcs-connector-trigger-function) function to be deployed in Cloud Function.
+> This directory contains the **Uploader** app that is deployed in Cloud Run. To run the whole Storage connector, you will also need the [**Trigger**](/cmd/trigger_function) function to be deployed in Cloud Function.
 
 
-GCS Connector uploads files on WizyVision, on every files that will be uploaded in the source GCS bucket.
+The GCS Connector enables automated, real-time transfer of all files added to the designated source GCS bucket to WizyVision.
 
 
 ![gcs connector](https://user-images.githubusercontent.com/4800851/211000369-70e9be5f-36a6-4e60-8232-f6b73d892d8b.png)
@@ -31,7 +31,7 @@ gcloud projects add-iam-policy-binding GOOGLE_CLOUD_PROJECT_ID_HERE \
     --member="serviceAccount:${SERVICE_ACCOUNT}" \
     --role='roles/pubsub.publisher'
 ```
-6. Install [docker](https://docs.docker.com/get-docker) for Manual installation.
+6. Install [Docker](https://docs.docker.com/get-docker) for Manual installation.
 
 
 ## Installation
@@ -53,7 +53,7 @@ Add these roles to the default service account:
 1. Clone this repository.
 
 ```
-git clone https://github.com/sephdiza/gcs-connector.git
+git clone https://github.com/wizyvision/gcs-connector.git
 ```
 2. Create a file named `.env` at the root of this folder. Copy the contents of `placeholder.env` and set the values.
 ```
@@ -107,8 +107,6 @@ gcloud run deploy IMAGE_NAME \
 <img width="920" alt="Screen Shot 2023-01-06 at 9 57 03 AM" src="https://user-images.githubusercontent.com/35460203/210914793-204acff1-a8ec-4328-b022-0b4bf33b9277.png">
 
 ## Testing the Connector
-> Note: The [**Trigger**](https://github.com/sephdiza/gcs-connector-trigger-function) function should already be deployed
+> Note: The [**Trigger**](/cmd/trigger_function) function should already be deployed
 1. Upload files on the GCS bucket
 2. In WizyVision webapp, you should see the file uploaded there with the correct tags and privacy set during the deployment
-
-
