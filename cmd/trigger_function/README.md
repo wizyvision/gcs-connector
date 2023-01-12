@@ -1,9 +1,9 @@
-# Google Cloud Storage Connector
+# GCS Connector - Trigger Function
 
-> This repo contains the **Trigger** app that is deployed in Cloud Function. To run the whole Storage connector, you will also need the [**Uploader**](https://github.com/sephdiza/gcs-connector) to be deployed in Cloud Run.
+> This directory contains the **Trigger** app that is deployed in Cloud Function. To run the whole Storage connector, you will also need the [**Uploader**](/cmd/uploader) to be deployed in Cloud Run.
 
 
-GCS Connector uploads files on WizyVision, on every files that will be uploaded in the source GCS bucket.
+The GCS Connector enables automated, real-time transfer of all files added to the designated source GCS bucket to WizyVision,
 
 
 ![gcs connector](https://user-images.githubusercontent.com/4800851/211000369-70e9be5f-36a6-4e60-8232-f6b73d892d8b.png)
@@ -41,3 +41,9 @@ SLACK_CHANNEL_ID: ""
 ```
 sh deploy.sh
 ```
+
+
+## Testing the Connector
+> Both the Uploader service and the Trigger function should be deployed
+1. Upload files on the GCS bucket
+2. In WizyVision webapp, you should see the file uploaded there with the correct tags and privacy set during the deployment
