@@ -26,12 +26,12 @@
       "description": "Slack channel id",
       "value": ""
     },
-    "AUTH_HEADER": {
+    "UPLOADER_SERVICE_AUTH_HEADER": {
       "description": "Auth header",
       "value": "Wizdam-Dev-Csc-Token",
       "required": true
     },
-    "AUTH_TOKEN": {
+    "UPLOADER_SERVICE_AUTH_TOKEN": {
       "description": "Auth token",
       "value": "",
       "required": true
